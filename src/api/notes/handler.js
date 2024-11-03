@@ -1,7 +1,10 @@
+const ClientError = require("../../exceptions/ClientError");
+
 class NotesHandler {
-  constructor(service) {
+  constructor(service, validator) {
     // Penggunaan nama variabel diawali underscore (_) dipertimbangkan sebagai lingkup privat secara konvensi.
     this._service = service;
+    this._validator = validator;
 
     this.postNoteHandler = this.postNoteHandler.bind(this);
     this.getNotesHandler = this.getNotesHandler.bind(this);
@@ -12,7 +15,8 @@ class NotesHandler {
 
   postNoteHandler(request, h) {
     try {
-      const { title = 'untitled', tags, body } = request.payload;    
+      this._validator.validateNotePayload(request.payload);
+      const { title = 'untitled', tags, body } = request.payload;
       const noteId = this._service.addNote({ title, tags, body });
       const response = h.response({
         status : 'success',
@@ -24,12 +28,25 @@ class NotesHandler {
       response.code(201);
       return response;
     } catch (error) {
+
+      // Client Error!
+      if(error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        })
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server Error!
       const response = h.response({
-        status: 'fail',
-        message : error.message,
+        status: 'error',
+        message : 'Maaf, terjadi kegagalan pada server kami.',
       });
     
-      response.code(400);
+      response.code(500);
+      console.error(error);
       return response;
     }
 
@@ -56,11 +73,25 @@ class NotesHandler {
         },
       };
     } catch (error) {
+
+      // Client Error!
+      if(error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        })
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server Error!
       const response = h.response({
-        status : 'fail',
-        message : error.message,
+        status: 'error',
+        message : 'Maaf, terjadi kegagalan pada server kami.',
       });
-      response.code(404);
+    
+      response.code(500);
+      console.error(error);
       return response;
     }
 
@@ -69,6 +100,7 @@ class NotesHandler {
 
   putNoteByIdHandler(request, h) {
     try {
+      this._validator.validateNotePayload(request.payload);
       const { id } = request.params;
       this._service.editNoteById(id, request.payload);
 
@@ -77,11 +109,25 @@ class NotesHandler {
         message : 'Catatan berhasil diperbaharui',
       };
     } catch (error) {
+
+      // Client Error!
+      if(error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        })
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server Error!
       const response = h.response({
-        status : 'fail',
-        message : error.message
+        status: 'error',
+        message : 'Maaf, terjadi kegagalan pada server kami.',
       });
-      response.code(404);
+    
+      response.code(500);
+      console.error(error);
       return response;
     }
 
@@ -97,11 +143,25 @@ class NotesHandler {
         message : 'Catatan berhasil dihapus',
       }
     } catch (error) {
+
+      // Client Error!
+      if(error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        })
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server Error!
       const response = h.response({
-        status : 'fail',
-        message : error.message,
+        status: 'error',
+        message : 'Maaf, terjadi kegagalan pada server kami.',
       });
-      response.code(404);
+    
+      response.code(500);
+      console.error(error);
       return response;
     }
   }
