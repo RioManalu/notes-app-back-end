@@ -39,8 +39,8 @@ class NotesService {
   }
 
   editNoteById(id, { title, tags, body }) {
-    console.log('id-editNoteById', id);
-    console.log('title-editNoteById', title);
+    // console.log('id-editNoteById', id);
+    // console.log('title-editNoteById', title);
     
     const index = this._notes.findIndex((note) => note.id === id);
     

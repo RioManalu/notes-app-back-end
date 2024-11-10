@@ -20,7 +20,6 @@ class NotesService {
     };
 
     const result = await this._pool.query(query);
-    console.log("result-addnote", result);
 
     if(!result.rows[0].id) {
       throw new InvariantError('Catatan gagal ditambahkan');
@@ -41,7 +40,6 @@ class NotesService {
     };
 
     const result = await this._pool.query(query);
-    console.log('result-getNoteById', result.rows);
 
     if(!result.rows.length) {
       throw new NotFoundError('Catatan tidak ditemukan');
@@ -58,7 +56,6 @@ class NotesService {
     };
 
     const result = await this._pool.query(query);
-    console.log('result-editNoteById', result.rows);
 
     if(!result.rows.length) {
       throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
@@ -72,7 +69,6 @@ class NotesService {
     };
 
     const result = await this._pool.query(query);
-    console.log('result-deleteNoteById', result.rows);
 
     if(!result.rows.length) {
       throw new NotFoundError('Catatan gagal dihapus. Id tidak ditemukan');
