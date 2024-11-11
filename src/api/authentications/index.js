@@ -1,5 +1,3 @@
-const AuthenticationsService = require("../../services/postgres/AuthenticationsService");
-const USersService = require("../../services/postgres/UsersService");
 const AuthenticationsHandler = require("./handler");
 const routes = require("./routes");
 
