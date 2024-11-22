@@ -24,6 +24,11 @@ const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
 
+//exports
+// karena kata exports merupakan salah satu member dari objek module, yang notabene di Node.js merupakan objek global pada cakupan berkas JavaScript
+const _exports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
@@ -95,6 +100,13 @@ const init = async () => {
         collaborationsService,
         notesService,
         validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin : _exports,
+      options: {
+        service : ProducerService,
+        validator: ExportsValidator,
       },
     },
   ]);
